@@ -11,6 +11,7 @@
         <div class="humidity">Humidity: {{ humidity }}%</div>
         <div class="update_time">Update: {{ now.format("YYYY-MM-DD HH:mm") }}</div>
       </div>
+      <LineChart/>
     </div>
     <div>2</div>
   </div>
@@ -21,6 +22,7 @@ import axios from 'axios';
 import { onMounted, ref } from 'vue';
 import hostname from '../utils/hostname';
 import dayjs from 'dayjs';
+import LineChart from '../components/LineChart.vue';
 
 let temperature=ref(0);
 let humidity=ref(0);
