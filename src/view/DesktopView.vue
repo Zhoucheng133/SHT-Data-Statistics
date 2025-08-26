@@ -1,7 +1,7 @@
 <template>
   <div class="page_bg">
     <div class="header">Temperature Statistics</div>
-    <div class="tophalf">
+    <div class="top_half">
       <div class="now_data">
         <div class="rightnow">Right now</div>
         <div class="temperature">
@@ -13,7 +13,9 @@
       </div>
       <LineChart/>
     </div>
-    <div>2</div>
+    <div class="bottom_half">
+      <Table />
+    </div>
   </div>
 </template>
 
@@ -23,6 +25,7 @@ import { onMounted, ref } from 'vue';
 import hostname from '../utils/hostname';
 import dayjs from 'dayjs';
 import LineChart from '../components/LineChart.vue';
+import Table from '../components/Table.vue';
 
 let temperature=ref(0);
 let humidity=ref(0);
@@ -37,6 +40,11 @@ onMounted(async ()=>{
 </script>
 
 <style scoped>
+.bottom_half{
+  overflow: scroll;
+  box-sizing: border-box;
+  padding-top: 10px;
+}
 .humidity{
   margin-top: 10px;
 }
@@ -68,7 +76,7 @@ onMounted(async ()=>{
   align-items: center;
   justify-content: center;
 }
-.tophalf{
+.top_half{
   display: grid;
   grid-template-columns: 1fr 2fr;
 }
