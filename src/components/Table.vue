@@ -12,7 +12,7 @@ import { h } from 'vue';
 import data from '../utils/data';
 import type { DataItem } from '../utils/data_interface';
 
-const height=window.innerHeight/2-10
+const height=(window.innerHeight-20)/2-10
 
 const columns: any=[
   {
