@@ -9,10 +9,10 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import type { DataItem } from '../utils/data_interface';
 import * as echarts from "echarts";
+import data from '../utils/data';
 
 const day=dayjs();
 let chartRef=ref();
-let data=ref<DataItem[]>([])
 let chartInstance: any = null;
 
 onMounted(async ()=>{
@@ -23,7 +23,7 @@ onMounted(async ()=>{
       day: day.date(),
     }
   })
-  data.value=response as DataItem[];
+  data().dataTable=response as DataItem[];
   onresize=()=>{
     initChart();
   }
@@ -36,9 +36,9 @@ function initChart(){
     chartInstance.dispose();
   }
   chartInstance = echarts.init(chartRef.value);
-  const times = data.value.map(item => item.timestamp.slice(11, 16)); // 只取HH:mm
-  const temps = data.value.map(item => item.temperature);
-  const hums = data.value.map(item => item.humidity);
+  const times = data().dataTable.map(item => item.timestamp.slice(11, 16)); // 只取HH:mm
+  const temps = data().dataTable.map(item => item.temperature);
+  const hums = data().dataTable.map(item => item.humidity);
   const option = {
     tooltip: {
       trigger: "axis",
