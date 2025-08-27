@@ -1,52 +1,30 @@
 <template>
-  <n-data-table
-    :columns="columns"
-    :data="data().dataTable"
-    :bordered="false"
-    :max-height=height
-  />
+  <DataTable :value="data().dataTable" scrollable :scrollHeight="tableHeight+'px'">
+    <Column field="timestamp" header="Time">
+      <template #body="slotProps">
+        {{ slotProps.data.timestamp.slice(11, -3) }}
+      </template>
+    </Column>
+    <Column field="temperature" header="Temperature">
+      <template #body="slotProps">
+        {{ slotProps.data.temperature + ' ℃' }}
+      </template>
+    </Column>
+    <Column field="humidity" header="Humidity">
+      <template #body="slotProps">
+        {{ slotProps.data.humidity + ' %' }}
+      </template>
+    </Column>
+  </DataTable>
 </template>
 
-<script lang="ts" setup>
-import { h } from 'vue';
+<script setup lang="ts">
+import { DataTable, Column } from 'primevue';
 import data from '../utils/data';
-import type { DataItem } from '../utils/data_interface';
+import { computed } from 'vue';
 
-const height=(window.innerHeight-20)/2-10
-
-const columns: any=[
-  {
-    title: "Time",
-    key: "timestamp",
-    render(row: DataItem){
-      return h(
-        "div",
-        row.timestamp.slice(11, -3)
-      )
-    }
-  },
-  {
-    title: "Temperature",
-    key: "temperature",
-    render(row: DataItem){
-      return h(
-        "div",
-        row.temperature+" ℃"
-      )
-    }
-  },
-  {
-    title: "Humidity",
-    key: "humidity",
-    render(row: DataItem){
-      return h(
-        "div",
-        row.humidity+" %"
-      )
-    }
-  }
-];
-
-
+let tableHeight=computed(()=>{
+  return (window.innerHeight-20-50)/2-10;
+})
 
 </script>

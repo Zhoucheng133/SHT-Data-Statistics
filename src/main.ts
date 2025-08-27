@@ -1,10 +1,15 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
-import naive from 'naive-ui';
+import PrimeVue from 'primevue/config';
 const pinia = createPinia();
+import Aura from '@primeuix/themes/aura';
 
-createApp(App)
-.use(pinia)
-.use(naive)
-.mount('#app')
+const app = createApp(App);
+app.use(pinia)
+app.use(PrimeVue, {
+  theme: {
+    preset: Aura
+  }
+});
+app.mount('#app')

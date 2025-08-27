@@ -41,7 +41,6 @@ onMounted(async ()=>{
 
 <style scoped>
 .bottom_half{
-  overflow: scroll;
   box-sizing: border-box;
   padding-top: 10px;
 }

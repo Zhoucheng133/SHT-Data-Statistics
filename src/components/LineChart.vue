@@ -24,7 +24,7 @@ onMounted(async ()=>{
     }
   })
   data().dataTable=response as DataItem[];
-  onresize=()=>{
+  window.onresize=()=>{
     initChart();
   }
   initChart()

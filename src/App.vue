@@ -1,8 +1,6 @@
 <template>
-  <n-config-provider>
-    <DesktopView v-if="pageWidth>500" />
-    <MobileView v-else />
-  </n-config-provider>
+  <DesktopView v-if="pageWidth>500" />
+  <MobileView v-else />
 </template>
 
 <script lang="ts" setup>
