@@ -5,11 +5,11 @@
       <div class="now_data">
         <div class="rightnow">Right now</div>
         <div class="temperature">
-          <div class="temperature_data">{{ temperature }}</div>
+          <div class="temperature_data">{{ data().temperature }}</div>
           <div class="celsius">℃</div>
         </div>
-        <div class="humidity">Humidity: {{ humidity }}%</div>
-        <div class="update_time">Update: {{ now.format("YYYY-MM-DD HH:mm") }}</div>
+        <div class="humidity">Humidity: {{ data().humidity }}%</div>
+        <div class="update_time">Update: {{ data().now.format("YYYY-MM-DD HH:mm") }}</div>
       </div>
       <LineChart/>
     </div>
@@ -20,23 +20,9 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
-import { onMounted, ref } from 'vue';
-import hostname from '../utils/hostname';
-import dayjs from 'dayjs';
 import LineChart from '../components/LineChart.vue';
 import Table from '../components/Table.vue';
-
-let temperature=ref(0);
-let humidity=ref(0);
-let now=ref(dayjs());
-
-onMounted(async ()=>{
-  const {data: response}=await axios.get(`${hostname}/get`);
-  now.value=dayjs();
-  temperature.value=response.temperature;
-  humidity.value=response.humidity;
-})
+import data from '../utils/data';
 </script>
 
 <style scoped>
