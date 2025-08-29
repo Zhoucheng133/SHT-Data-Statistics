@@ -28,13 +28,15 @@ onMounted(async ()=>{
   initChart()
 })
 
-function initChart(){
+async function initChart(){
   const width = chartRef.value?.clientWidth || 0;
   const height = chartRef.value?.clientHeight || 0;
   if (width === 0 || height === 0) {
     return;
   }
-  if (!chartRef.value) return;
+  if (!chartRef.value){
+    return;
+  };
   if (chartInstance) {
     chartInstance.dispose();
   }

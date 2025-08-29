@@ -23,8 +23,10 @@ import { DataTable, Column } from 'primevue';
 import data from '../utils/data';
 import { computed } from 'vue';
 
+const props = defineProps(["mobile"])
+
 let tableHeight=computed(()=>{
-  return (window.innerHeight-20-50)/2-10;
+  return props.mobile ? window.innerHeight*0.6 : (window.innerHeight-20-50)/2-10;
 })
 
 </script>

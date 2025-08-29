@@ -14,7 +14,7 @@
       <LineChart/>
     </div>
     <div class="bottom_half">
-      <Table />
+      <Table :mobile="false" />
     </div>
   </div>
 </template>
