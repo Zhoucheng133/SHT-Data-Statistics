@@ -797,6 +797,11 @@ postcss@^8.5.6:
     picocolors "^1.1.1"
     source-map-js "^1.2.1"
 
+primeicons@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.npmmirror.com/primeicons/-/primeicons-7.0.0.tgz#6b25c3fdcb29bb745a3035bdc1ed5902f4a419cf"
+  integrity sha512-jK3Et9UzwzTsd6tzl2RmwrVY/b8raJ3QZLzoDACj+oTJ0oX7L9Hy+XnVwgo4QVKlKpnP/Ur13SXV/pVh4LzaDw==
+
 primevue@^4.3.7:
   version "4.3.7"
   resolved "https://registry.npmmirror.com/primevue/-/primevue-4.3.7.tgz#6f2886e7e272e8d0d272d36e37e0eb1c8e2d29aa"
