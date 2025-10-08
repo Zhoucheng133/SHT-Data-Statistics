@@ -1,21 +1,65 @@
 <template>
-  <div ref="chartRef"></div>
+  <div class="chart_area">
+    <div class="flex flex-wrap gap-4 radios">
+      <div class="flex items-center gap-2">
+        <RadioButton v-model="mode" inputId="mode1" value="today" />
+        <label for="mode1" class="radio_label">Today</label>
+      </div>
+      <div class="flex items-center gap-2">
+        <RadioButton v-model="mode" inputId="mode2" value="recent_temperature" />
+        <label for="mode2" class="radio_label">Recent °C</label>
+      </div>
+      <div class="flex items-center gap-2">
+        <RadioButton v-model="mode" inputId="mode3" value="recent_humidity" />
+        <label for="mode3" class="radio_label">Recent %</label>
+      </div>
+    </div>
+    <div ref="chartRef"></div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import hostname from '../utils/hostname';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import type { DataItem } from '../utils/data_interface';
+import type { DataItem, RecentT } from '../utils/data_interface';
 import * as echarts from "echarts";
 import data from '../utils/data';
+import { RadioButton } from 'primevue';
+import { recentHConfig, todayConfig } from '../utils/static';
 
 const day=dayjs();
 let chartRef=ref();
 let chartInstance: any = null;
 
+const mode=ref("today")
+
 onMounted(async ()=>{
+  window.addEventListener('resize', initChart)
+  initChart()
+})
+
+watch(mode, ()=>{
+  initChart();
+})
+
+async function initRecentT(){
+  let {data: response}=await axios.get(`${hostname}/get/recent/temperature`, {
+    params: {
+      day: 60,
+    }
+  })
+  data().recentTData=response as RecentT[];
+  chartInstance = echarts.init(chartRef.value);
+  const times = data().recentTData.map(item => item.date.slice(5, 10))
+  const max = data().recentTData.map(item => item.max_temp);
+  const min = data().recentTData.map(item => item.min_temp);
+  
+  chartInstance.setOption(recentHConfig(times, max, min));
+}
+
+async function initToday() {
   let {data: response}=await axios.get(`${hostname}/get/day`, {
     params: {
       year: day.year(),
@@ -23,10 +67,14 @@ onMounted(async ()=>{
       day: day.date(),
     }
   })
-  data().dataTable=response as DataItem[];
-  window.addEventListener('resize', initChart)
-  initChart()
-})
+  data().todayData=response as DataItem[];
+  chartInstance = echarts.init(chartRef.value);
+  const times = data().todayData.map(item => item.timestamp.slice(11, 16)); // 只取HH:mm
+  const temps = data().todayData.map(item => item.temperature);
+  const hums = data().todayData.map(item => item.humidity);
+
+  chartInstance.setOption(todayConfig(times, temps, hums));
+}
 
 async function initChart(){
   const width = chartRef.value?.clientWidth || 0;
@@ -41,111 +89,25 @@ async function initChart(){
     chartInstance.dispose();
   }
 
-  chartInstance = echarts.init(chartRef.value);
-  const times = data().dataTable.map(item => item.timestamp.slice(11, 16)); // 只取HH:mm
-  const temps = data().dataTable.map(item => item.temperature);
-  const hums = data().dataTable.map(item => item.humidity);
-  const option = {
-    tooltip: {
-      trigger: "axis",
-      formatter: (params: any) => {
-        let time = params[0].axisValue;
-        let content = `${time}<br/>`;
-        params.forEach((item: any) => {
-          const unit = item.seriesName === "Temperature" ? "°C" : "%";
-          content += `${item.seriesName === "Temperature" ? "🌡" : "💧"} ${item.seriesName}: ${item.data}${unit}<br/>`;
-        });
-        return content;
-      }
-    },
-    legend: {
-      data: ["Temperature", "Humidity"],
-      top: "5%",
-      selected: {
-        "Temperature": true,
-        "Humidity": false
-      },
-      textStyle: {
-        fontSize: '15'
-      }
-    },
-    grid: {
-      top: "15%",
-      left: "8%",
-      right: "8%",
-      bottom: "10%"
-    },
-    xAxis: {
-      type: "category",
-      boundaryGap: false,
-      data: times,
-      axisLabel: {
-        rotate: 45,
-        interval: "auto",
-        fontSize: '16'
-      }
-    },
-    yAxis: [
-      {
-        type: "value",
-        name: "Temperature (°C)",
-        position: "left",
-        axisLine: {
-          lineStyle: { color: "#ff6b6b" }
-        },
-        splitLine: { show: true },
-        min: function (value: any) {
-          return (value.min - 2).toFixed(1);
-        },
-        max: function (value: any) {
-          return (value.max + 2).toFixed(1);
-        },
-        axisLabel :{
-          fontSize: '16'
-        }
-      },
-      {
-        type: "value",
-        name: "Humidity (%)",
-        position: "right",
-        axisLine: {
-          lineStyle: { color: "#3398db" }
-        },
-        splitLine: { show: false },
-        min: function (value: any) {
-          return (value.min - 2).toFixed(1);
-        },
-        max: function (value: any) {
-          return (value.max + 2).toFixed(1);
-        },
-      }
-    ],
-    series: [
-      {
-        name: "Temperature",
-        type: "line",
-        smooth: true,
-        data: temps,
-        yAxisIndex: 0,
-        itemStyle: { color: "#ff6b6b" },
-        symbol: "circle",
-        symbolSize: 8
-      },
-      {
-        name: "Humidity",
-        type: "line",
-        smooth: true,
-        data: hums,
-        yAxisIndex: 1,
-        itemStyle: { color: "#3398db" },
-        symbol: "circle",
-        symbolSize: 8
-      }
-    ]
-  };
-
-  chartInstance.setOption(option);
-
+  if(mode.value=="today"){
+    initToday();
+  }else if(mode.value=="recent_temperature"){
+    initRecentT();
+  }
 }
 
 </script>
+
+<style scoped>
+.radios{
+  align-items: center;
+  justify-content: center;
+}
+.radio_label{
+  cursor: pointer;
+}
+.chart_area{
+  display: grid;
+  grid-template-rows: 30px auto;
+}
+</style>
