@@ -18,11 +18,11 @@ export const recentHConfig=(times: any, max: number[], min: number[])=>{
       }
     },
     legend: {
-      data: ["max", "min"],
+      data: ["Max", "Min"],
       top: "5%",
       selected: {
-        "max": true,
-        "min": true
+        "Max": true,
+        "Min": true
       },
       textStyle: {
         fontSize: '15'
@@ -62,7 +62,7 @@ export const recentHConfig=(times: any, max: number[], min: number[])=>{
     ],
     series: [
       {
-        name: "max",
+        name: "Max",
         type: "line",
         smooth: true,
         data: max,
@@ -72,7 +72,7 @@ export const recentHConfig=(times: any, max: number[], min: number[])=>{
         symbolSize: 8
       },
       {
-        name: "min",
+        name: "Min",
         type: "line",
         smooth: true,
         data: min,
