@@ -6,12 +6,12 @@ export interface DataItem{
 
 export interface RecentT{
   date: string,
-  maxTemperature: number
-  minTemperature: number
+  max_temp: number
+  min_temp: number
 }
 
 export interface RecentH{
   date: string,
-  maxHumidity: number
-  minHumidity: number
+  max_humidity: number
+  min_humidity: number
 }
