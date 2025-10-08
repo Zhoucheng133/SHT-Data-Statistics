@@ -14,7 +14,7 @@
         <label for="mode3" class="radio_label">Recent %</label>
       </div>
     </div>
-    <div ref="chartRef"></div>
+    <div ref="chartRef" style="height: 100%; width: 100%;"></div>
   </div>
 </template>
 
