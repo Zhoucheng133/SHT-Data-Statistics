@@ -1,5 +1,5 @@
 <template>
-  <DataTable :value="data().dataTable" scrollable :scrollHeight="tableHeight+'px'">
+  <DataTable :value="data().todayData" scrollable :scrollHeight="tableHeight+'px'">
     <Column field="timestamp" header="Time">
       <template #body="slotProps">
         {{ slotProps.data.timestamp.slice(11, -3) }}

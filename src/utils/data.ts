@@ -1,12 +1,14 @@
 import { defineStore } from "pinia";
-import type { DataItem } from "./data_interface";
+import type { DataItem, RecentH, RecentT } from "./data_interface";
 import { ref } from "vue";
 import dayjs from "dayjs";
 import hostname from "./hostname";
 import axios from "axios";
 
 export default defineStore("data", ()=>{
-  let dataTable=ref<DataItem[]>([]);
+  let todayData=ref<DataItem[]>([]);
+  let recentTData=ref<RecentT[]>([]);
+  let recentHData=ref<RecentH[]>([]);
   let temperature=ref(0);
   let humidity=ref(0);
   let now=ref(dayjs());
@@ -18,7 +20,9 @@ export default defineStore("data", ()=>{
   }
 
   return {
-    dataTable,
+    todayData,
+    recentTData,
+    recentHData,
     getData,
     temperature,
     humidity,
