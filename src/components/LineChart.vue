@@ -23,11 +23,11 @@ import { onMounted, ref, watch } from 'vue';
 import hostname from '../utils/hostname';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import type { DataItem, RecentT } from '../utils/data_interface';
+import type { DataItem, RecentH, RecentT } from '../utils/data_interface';
 import * as echarts from "echarts";
 import data from '../utils/data';
 import { RadioButton } from 'primevue';
-import { recentHConfig, todayConfig } from '../utils/static';
+import { recentHConfig, recentTConfig, todayConfig } from '../utils/static';
 
 const day=dayjs();
 let chartRef=ref();
@@ -55,6 +55,21 @@ async function initRecentT(){
   const times = data().recentTData.map(item => item.date.slice(5, 10))
   const max = data().recentTData.map(item => item.max_temp);
   const min = data().recentTData.map(item => item.min_temp);
+  
+  chartInstance.setOption(recentTConfig(times, max, min));
+}
+
+async function initRecentH(){
+  let {data: response}=await axios.get(`${hostname}/get/recent/humidity`, {
+    params: {
+      day: 60,
+    }
+  })
+  data().recentHData=response as RecentH[];
+  chartInstance = echarts.init(chartRef.value);
+  const times = data().recentHData.map(item => item.date.slice(5, 10))
+  const max = data().recentHData.map(item => item.max_humidity);
+  const min = data().recentHData.map(item => item.min_humidity);
   
   chartInstance.setOption(recentHConfig(times, max, min));
 }
@@ -93,6 +108,8 @@ async function initChart(){
     initToday();
   }else if(mode.value=="recent_temperature"){
     initRecentT();
+  }else if(mode.value=="recent_humidity"){
+    initRecentH();
   }
 }
 

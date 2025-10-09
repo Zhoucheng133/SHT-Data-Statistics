@@ -1,4 +1,4 @@
-export const recentHConfig=(times: any, max: number[], min: number[])=>{
+export const recentTConfig=(times: any, max: number[], min: number[])=>{
 
   const allValues = max.concat(min);
   const globalMin = Math.floor(Math.min(...allValues) - 2);
@@ -178,6 +178,93 @@ export const todayConfig=(times: any, temps: number[], hums: number[])=>{
         smooth: true,
         data: hums,
         yAxisIndex: 1,
+        itemStyle: { color: "#3398db" },
+        symbol: "circle",
+        symbolSize: 8
+      }
+    ]
+  };
+}
+
+export const recentHConfig=(times: any, max: number[], min: number[])=>{
+
+  const allValues = max.concat(min);
+  const globalMin = Math.floor(Math.min(...allValues) - 2);
+  const globalMax = Math.ceil(Math.max(...allValues) + 2);
+
+  return {
+    tooltip: {
+      trigger: "axis",
+      formatter: (params: any) => {
+        let time = params[0].axisValue;
+        let content = `${time}<br/>`;
+        params.forEach((item: any) => {
+          const unit = "%";
+          content += `${item.seriesName}: ${item.data}${unit}<br/>`;
+        });
+        return content;
+      }
+    },
+    legend: {
+      data: ["Max", "Min"],
+      top: "5%",
+      selected: {
+        "Max": true,
+        "Min": true
+      },
+      textStyle: {
+        fontSize: '15'
+      }
+    },
+    grid: {
+      top: "15%",
+      left: "8%",
+      right: "8%",
+      bottom: "10%"
+    },
+    xAxis: {
+      type: "category",
+      boundaryGap: false,
+      data: times,
+      axisLabel: {
+        rotate: 45,
+        interval: "auto",
+        fontSize: '16'
+      }
+    },
+    yAxis: [
+      {
+        type: "value",
+        name: "%",
+        position: "left",
+        axisLine: {
+          lineStyle: { color: "#ff6b6b" }
+        },
+        splitLine: { show: true },
+        min: globalMin,
+        max: globalMax,
+        axisLabel :{
+          fontSize: '16'
+        }
+      },
+    ],
+    series: [
+      {
+        name: "Max",
+        type: "line",
+        smooth: true,
+        data: max,
+        yAxisIndex: 0,
+        itemStyle: { color: "#ff6b6b" },
+        symbol: "circle",
+        symbolSize: 8
+      },
+      {
+        name: "Min",
+        type: "line",
+        smooth: true,
+        data: min,
+        yAxisIndex: 0,
         itemStyle: { color: "#3398db" },
         symbol: "circle",
         symbolSize: 8
